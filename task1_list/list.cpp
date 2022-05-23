@@ -5,19 +5,44 @@
 
 List* initList(void)
 {
-    List* pRoot = (List*)malloc(sizeof(*pRoot));
-    pRoot->pPlateNum = (char*)malloc(strlen("Root") + 1u);
-    strcpy(pRoot->pPlateNum, "Root");
-    time(&(pRoot->entryTime));
-    pRoot->pNext = NULL;
-
-    return pRoot;
-}
+  List* pRoot = (List*)malloc(sizeof(*pRoot));
+  if (pRoot == NULL) {
+      std::cout << "Allocation Error, returning null";
+      return NULL;
+  }
+  pRoot->pPlateNum = (char*)malloc(strlen("Root") + 1u);
+  strcpy(pRoot->pPlateNum, "Root");
+  time(&(pRoot->entryTime));
+  pRoot->pNext = NULL;
+	return pRoot;
+} 
 
 void deinitList(List* pRoot)
 {
-    free(pRoot->pPlateNum);
-    free(pRoot);
+
+ 
+	List* pCurrent = pRoot;
+	List* pPrev;
+	
+	while(pRoot->pNext != NULL)
+	{
+		while(pCurrent->pNext != NULL)
+		{
+			pPrev = pCurrent;
+			pCurrent = pCurrent->pNext;
+		}
+		free(pCurrent);
+		pCurrent = NULL;
+		pPrev->pNext = NULL;
+		pCurrent = pRoot;
+	}
+	
+	free(pRoot);
+	pRoot = NULL;
+	pRoot->pNext = NULL;
+	
+	
+
 }
 
 void addCar(List* pRoot, char* plateNum)
@@ -85,12 +110,25 @@ void removeCar(List* pRoot, char* plateNum)
     }
 
 }
-void printAll(List* pRoot) 
-{
 
+void printAll(List* pRoot) {
+	
 }
 
 int numberOfElements(List* pRoot)
 {
-	return 0;
+	List* pCurrent = pRoot;
+	int number = 0;
+	
+	if ( pRoot == NULL )
+		return 0;
+	
+	
+	while( pCurrent->pNext != NULL )
+	{
+		pCurrent = pCurrent->pNext;
+		number++;
+	}
+	
+	return number+1;
 }
